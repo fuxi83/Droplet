@@ -18,11 +18,12 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 
  NEW
 ------------------------
-* use launch4j (http://launch4j.sourceforge.net/)
-* check new features in updated libraries 
-* maven version up
-* read version from properties file (see https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code)
-* use maven and/or ant for build process
+- use git-flow
+- use launch4j (http://launch4j.sourceforge.net/)
+- check new features in updated libraries 
+- maven version up
+- read version from properties file (see https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code)
+- use maven and/or ant for build process
 
 
  VERY HIGH
@@ -31,30 +32,30 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 
  HIGH
 ------------------------
-* use micro seconds
-* problems with data send and arduino uno/nano
-* be careful with arduino files to exist in correct directory
-* Simple Logging of photo number combined with the current configuration
-* correct dsc-protocol.txt
-* Logging of exceptions/errors/informations/...
-* use jGoodies Forms and Validation
+- use micro seconds
+- problems with data send and arduino uno/nano
+- be careful with arduino files to exist in correct directory
+- Simple Logging of photo number combined with the current configuration
+- correct dsc-protocol.txt
+- Logging of exceptions/errors/informations/...
+- use jGoodies Forms and Validation
 
 
  NORMAL
 ------------------------
-* Configuration for IDropletMessageProtocol (implements send/start/stop/rounds/delay/...)
+- Configuration for IDropletMessageProtocol (implements send/start/stop/rounds/delay/...)
   to show or hide ui controls
-* create sexy icons
-* build installers
-* disable start button as long as the execution is running
-* enable cancel button only if execution is running
+- create sexy icons
+- build installers
+- disable start button as long as the execution is running
+- enable cancel button only if execution is running
 
 
  LOW
 ------------------------
-* Fix UI Layout Issues
-* Analyse Heap Dump with lots of devices and actions
-* Exception handling for RxTx
+- Fix UI Layout Issues
+- Analyse Heap Dump with lots of devices and actions
+- Exception handling for RxTx
 
 
 
@@ -62,19 +63,19 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
  I D E A S
 ================================================================================
 
-* save comments to a saved configuration
+- save comments to a saved configuration
 
-* direct device control: send OFF to all that are ON when closing
-* Disable Serial Communication Actions if No Connection is established
-* Only fire association changed event if object was added/removed?
-* Set Description and Color per Device
-* Mark Device Type with Icons
-* Sensors
+- direct device control: send OFF to all that are ON when closing
+- Disable Serial Communication Actions if No Connection is established
+- Only fire association changed event if object was added/removed?
+- Set Description and Color per Device
+- Mark Device Type with Icons
+- Sensors
 	- Sensor Setup Panel
 	- SensorAction starts when sensor fires (with offset and/or duration)
-* Setup Flashes without valves
-* Empty valves (all, single, combination)
-* Processing:
+- Setup Flashes without valves
+- Empty valves (all, single, combination)
+- Processing:
 	o links for metadata edit:
 		- http://www.adobe.com/devnet/xmp.html
 		- http://sourceforge.net/projects/im4java/
@@ -124,25 +125,25 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 		</rdf:Bag>
 
 
-* Logging:
+- Logging:
 	o Move logging to own window?
 	o Add colored logging messages
 	o Make logging level editable
 	o log comments, times, setup, ... per session into file
-* Internationalize Messages from Arduino
-* Make language configurable
+- Internationalize Messages from Arduino
+- Make language configurable
 
-* Tabbed View (Setup, Shooting, Finish/Clean)
-* make devices moveable
-* Create own Spinner for easier round delay input
-* Drag&Drop Device Panels and Actions
-* Open/Close Panels
-* Create Custom L&F with Synth or Nimbus
-* Dark Nimbus color theme
-* Graphical View of one cycle
-* Automatic Action Times:
+- Tabbed View (Setup, Shooting, Finish/Clean)
+- make devices moveable
+- Create own Spinner for easier round delay input
+- Drag&Drop Device Panels and Actions
+- Open/Close Panels
+- Create Custom L&F with Synth or Nimbus
+- Dark Nimbus color theme
+- Graphical View of one cycle
+- Automatic Action Times:
 	o Offset + Duration = min. Offset of the following Action
-* Viscosity Factor:
+- Viscosity Factor:
 	o Factor that adapts the action times of devices
 
 ==EOF===========================================================================
