@@ -21,7 +21,6 @@ package com.stefanbrenner.droplet.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -110,34 +109,38 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 		// only for testing purposes
 		// Locale.setDefault(Locale.GERMAN);
 		
-		// TODO brenner: identify that we run on a mac
-		// String lcOSName = System.getProperty("os.name").toLowerCase();
-		// boolean IS_MAC = lcOSName.startsWith("mac os x");
+		// identify that we run on a mac
+		String lcOSName = System.getProperty("os.name").toLowerCase();
+		boolean IS_MAC = lcOSName.startsWith("mac os x");
 		
-		// put jmenubar on mac menu bar
-		System.setProperty("apple.laf.useScreenMenuBar", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-		// set application name
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name", //$NON-NLS-1$
-				Messages.getString("DropletMainFrame.about")); //$NON-NLS-1$
-		// set look and feel
-		try {
-			// use nimbus L&F if available
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-			log.warn("Nimbus L&F not found!");
+		if (IS_MAC) {
+			// put jmenubar on mac menu bar
+			System.setProperty("apple.laf.useScreenMenuBar", "true"); // $NON-NLS-1$ //$NON-NLS-2$
+			// use smoother fonts
+			System.setProperty("apple.awt.textantialiasing", "true");
+			// set the brushed metal look and feel, if desired
+			System.setProperty("apple.awt.brushMetalLook", "true");
+			// use the system look and feel
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} else {
+			try {
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+					if ("Nimbus".equals(info.getName())) {
+						UIManager.setLookAndFeel(info.getClassName());
+						break;
+					}
+				}
+			} catch (Exception e) {
+				// use the system look and feel
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
 		}
 		
 		// initialize DropletConfig
 		log.info("initialize config");
 		new ConfigBuilder<DropletConfig>(DropletConfig.class).build();
 		
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
