@@ -45,13 +45,18 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.apple.mrj.MRJAboutHandler;
 import com.apple.mrj.MRJApplicationUtils;
 import com.apple.mrj.MRJPrefsHandler;
 import com.apple.mrj.MRJQuitHandler;
 import com.stefanbrenner.droplet.model.IDropletContext;
+import com.stefanbrenner.droplet.model.internal.Configuration;
 import com.stefanbrenner.droplet.model.internal.Droplet;
 import com.stefanbrenner.droplet.model.internal.DropletContext;
+import com.stefanbrenner.droplet.service.IDropletMessageProtocol;
+import com.stefanbrenner.droplet.service.ISerialCommunicationService;
 import com.stefanbrenner.droplet.ui.actions.ExitAction;
 import com.stefanbrenner.droplet.ui.actions.PreferencesAction;
 import com.stefanbrenner.droplet.ui.actions.StartAction;
@@ -59,6 +64,14 @@ import com.stefanbrenner.droplet.utils.DropletConfig;
 import com.stefanbrenner.droplet.utils.DropletFonts;
 import com.stefanbrenner.droplet.utils.Messages;
 import com.stefanbrenner.droplet.utils.UiUtils;
+import com.thizzer.jtouchbar.JTouchBar;
+import com.thizzer.jtouchbar.common.Color;
+import com.thizzer.jtouchbar.common.Image;
+import com.thizzer.jtouchbar.common.ImageName;
+import com.thizzer.jtouchbar.item.TouchBarItem;
+import com.thizzer.jtouchbar.item.view.TouchBarButton;
+import com.thizzer.jtouchbar.item.view.TouchBarView;
+import com.thizzer.jtouchbar.item.view.action.TouchBarViewAction;
 import com.tngtech.configbuilder.ConfigBuilder;
 
 import lombok.extern.slf4j.Slf4j;
@@ -146,6 +159,13 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 				try {
 					DropletMainFrame frame = new DropletMainFrame();
 					frame.setVisible(true);
+					
+					// init touchbar
+					JTouchBar jTouchBar = new JTouchBar();
+					jTouchBar.setCustomizationIdentifier("DropletJavaTouchBar");
+					jTouchBar.show(frame);
+					frame.initTouchBar(jTouchBar);
+					
 				} catch (Exception e) {
 					log.error("A fatal error occured: ", e);
 					e.printStackTrace();
@@ -281,6 +301,65 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 		
 		log.info("Droplet started successfully!");
 		
+	}
+	
+	// TODO refactor
+	private void initTouchBar(final JTouchBar touchBar) {
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFlexibleSpace));
+		
+		// send button
+		TouchBarButton sendButton = new TouchBarButton();
+		// sendButton.setTitle("Send");
+		sendButton.setImage(new Image(ImageName.NSImageNameTouchBarRefreshTemplate, false));
+		sendButton.setBezelColor(Color.LIGHT_GRAY);
+		sendButton.setAction(new TouchBarViewAction() {
+			@Override
+			public void onCall(final TouchBarView view) {
+				// TODO call action
+				System.out.println("Send config to MC");
+			}
+		});
+		touchBar.addItem(new TouchBarItem("Send", sendButton, true));
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFixedSpaceSmall));
+		
+		// start button
+		TouchBarButton startButton = new TouchBarButton();
+		// startButton.setTitle("Start");
+		startButton.setImage(new Image(ImageName.NSImageNameTouchBarPlayTemplate, false));
+		startButton.setBezelColor(Color.DARK_GRAY);
+		startButton.setAction(new TouchBarViewAction() {
+			@Override
+			public void onCall(final TouchBarView view) {
+				// TODO: call service instead
+				{
+					ISerialCommunicationService serialCommProvider = Configuration.getSerialCommProvider();
+					IDropletMessageProtocol messageProtocolProvider = Configuration.getMessageProtocolProvider();
+					
+					// send configuration if it changed since last send
+					String setMessage = messageProtocolProvider.createSetMessage(dropletContext.getDroplet());
+					if (!StringUtils.equals(setMessage, dropletContext.getLastSetMessage())) {
+						String resetMessage = messageProtocolProvider.createResetMessage();
+						serialCommProvider.sendData(resetMessage);
+						serialCommProvider.sendData(setMessage);
+						dropletContext.setLastSetMessage(setMessage);
+					}
+					
+					Integer rounds = dropletContext.getRounds();
+					Integer roundDelay = dropletContext.getRoundDelay();
+					
+					String message = messageProtocolProvider.createStartMessage(rounds, roundDelay);
+					serialCommProvider.sendData(message);
+				}
+			}
+		});
+		touchBar.addItem(new TouchBarItem("Start", startButton, true));
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFlexibleSpace));
 	}
 	
 	/**

@@ -107,6 +107,13 @@
 			<version>1.0</version>
 		</dependency>
 
+		<!-- OSX touchbar support  -->
+		<dependency>
+			<groupId>com.thizzer.jtouchbar</groupId>
+			<artifactId>jtouchbar</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
 		<!-- test -->
 		<dependency>
 			<groupId>junit</groupId>
