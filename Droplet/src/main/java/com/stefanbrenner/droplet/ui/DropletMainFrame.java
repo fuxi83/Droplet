@@ -191,21 +191,16 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 			loggingPanel = new LoggingPanel(dropletContext);
 			imageViewer = new ImageViewer(dropletContext);
 			
-			JSplitPane fooPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, configPanel, imageViewer);
-			fooPane.setOneTouchExpandable(true);
-			fooPane.setDividerLocation(0.5d);
-			fooPane.setContinuousLayout(true);
-			
-			JSplitPane splitPaneBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, processingPanel, loggingPanel);
+			JSplitPane splitPaneBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, processingPanel, imageViewer);
 			splitPaneBottom.setOneTouchExpandable(true);
 			splitPaneBottom.setDividerLocation(0.5d);
-			// splitPaneBottom.setResizeWeight(0.1d);
+			splitPaneBottom.setResizeWeight(0.5d);
 			splitPaneBottom.setContinuousLayout(true);
 			
-			JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, fooPane, splitPaneBottom);
+			JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, configPanel, splitPaneBottom);
 			splitPaneMain.setOneTouchExpandable(true);
 			splitPaneMain.setDividerLocation(0.5d);
-			splitPaneMain.setResizeWeight(0.85d);
+			splitPaneMain.setResizeWeight(0.5d);
 			splitPaneMain.setContinuousLayout(true);
 			contentPane.add(splitPaneMain, BorderLayout.CENTER);
 		}

@@ -7,13 +7,23 @@ import java.awt.ScrollPane;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.stefanbrenner.droplet.model.IDropletContext;
+import com.stefanbrenner.droplet.model.internal.Configuration;
+import com.stefanbrenner.droplet.utils.Messages;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,12 +34,15 @@ public class ImageViewer extends JPanel {
 	
 	private final JLabel image;
 	
+	private final ScrollPane scrollPane;
+	
 	public ImageViewer(final IDropletContext dropletContext) {
 		
 		setLayout(new BorderLayout());
-		setMinimumSize(new Dimension(Short.MIN_VALUE, 200));
+		setSize(new Dimension(Short.MIN_VALUE, 400));
+		setBorder(BorderFactory.createTitledBorder(Messages.getString("PreviewPanel.title"))); //$NON-NLS-1$
 		
-		ScrollPane scrollPane = new ScrollPane();
+		scrollPane = new ScrollPane();
 		
 		image = new JLabel();
 		image.setHorizontalAlignment(JLabel.CENTER);
@@ -37,19 +50,40 @@ public class ImageViewer extends JPanel {
 		scrollPane.add(image);
 		
 		add(scrollPane, BorderLayout.CENTER);
+		
+		new Thread(() -> listenToDir()).start();
 	}
 	
-	public void showImage() {
-		String watchFolder = "/Users/stefan/Development/droplet-repo/Droplet/src/main/resources/";
-		String imageFile = watchFolder + "image.jpg";
-		File file = new File(imageFile);
+	private void listenToDir() {
 		try {
-			BufferedImage bimg = ImageIO.read(file);
-			Image scaled = bimg.getScaledInstance(-1, 500, Image.SCALE_SMOOTH);
+			WatchService watchService = FileSystems.getDefault().newWatchService();
+			Path dir = Paths.get(Configuration.getWatchFolderURI());
+			dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+			
+			WatchKey key;
+			while ((key = watchService.take()) != null) {
+				for (WatchEvent<?> event : key.pollEvents()) {
+					Path name = ((WatchEvent<Path>) event).context();
+					File newImage = dir.resolve(name).toFile();
+					
+					showImage(newImage);
+				}
+				key.reset();
+			}
+			
+		} catch (IOException | InterruptedException e) {
+			log.error("error watching folder {} for new images", Configuration.getWatchFolderURI());
+		}
+	}
+	
+	public void showImage(final File newImageFile) {
+		try {
+			BufferedImage bimg = ImageIO.read(newImageFile);
+			Image scaled = bimg.getScaledInstance(-1, scrollPane.getHeight(), Image.SCALE_SMOOTH);
 			ImageIcon icon = new ImageIcon(scaled);
 			image.setIcon(icon);
 		} catch (IOException e) {
-			log.error("error loading image {}", imageFile);
+			log.error("error loading image {}", newImageFile);
 		}
 	}
 	

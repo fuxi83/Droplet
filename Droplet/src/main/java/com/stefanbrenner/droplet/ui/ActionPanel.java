@@ -98,7 +98,7 @@ public class ActionPanel<T extends IAction> extends JPanel {
 		spOffset.setToolTipText(Messages.getString("ActionPanel.Offset.Tooltip")); //$NON-NLS-1$
 		spOffset.setModel(SpinnerAdapterFactory.createNumberAdapter(adapter.getValueModel(IAction.PROPERTY_OFFSET), 0,
 				0, ActionPanel.MAX_TIME_INPUT, 1));
-		((JSpinner.DefaultEditor) spOffset.getEditor()).getTextField().setColumns(4);
+		((JSpinner.DefaultEditor) spOffset.getEditor()).getTextField().setColumns(3);
 		UiUtils.editGridBagConstraints(gbc, 1, 0, 0, 0);
 		add(spOffset, gbc);
 		
@@ -108,7 +108,7 @@ public class ActionPanel<T extends IAction> extends JPanel {
 		if (action instanceof IDurationAction) {
 			spDuration.setModel(SpinnerAdapterFactory.createNumberAdapter(
 					adapter.getValueModel(IDurationAction.PROPERTY_DURATION), 0, 0, ActionPanel.MAX_TIME_INPUT, 1));
-			((JSpinner.DefaultEditor) spDuration.getEditor()).getTextField().setColumns(4);
+			((JSpinner.DefaultEditor) spDuration.getEditor()).getTextField().setColumns(3);
 			UiUtils.editGridBagConstraints(gbc, 2, 0, 0, 0);
 			add(spDuration, gbc);
 		}
