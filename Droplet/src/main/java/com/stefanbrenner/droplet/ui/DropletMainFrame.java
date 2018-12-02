@@ -21,7 +21,6 @@ package com.stefanbrenner.droplet.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -46,13 +45,18 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.apple.mrj.MRJAboutHandler;
 import com.apple.mrj.MRJApplicationUtils;
 import com.apple.mrj.MRJPrefsHandler;
 import com.apple.mrj.MRJQuitHandler;
 import com.stefanbrenner.droplet.model.IDropletContext;
+import com.stefanbrenner.droplet.model.internal.Configuration;
 import com.stefanbrenner.droplet.model.internal.Droplet;
 import com.stefanbrenner.droplet.model.internal.DropletContext;
+import com.stefanbrenner.droplet.service.IDropletMessageProtocol;
+import com.stefanbrenner.droplet.service.ISerialCommunicationService;
 import com.stefanbrenner.droplet.ui.actions.ExitAction;
 import com.stefanbrenner.droplet.ui.actions.PreferencesAction;
 import com.stefanbrenner.droplet.ui.actions.StartAction;
@@ -60,6 +64,14 @@ import com.stefanbrenner.droplet.utils.DropletConfig;
 import com.stefanbrenner.droplet.utils.DropletFonts;
 import com.stefanbrenner.droplet.utils.Messages;
 import com.stefanbrenner.droplet.utils.UiUtils;
+import com.thizzer.jtouchbar.JTouchBar;
+import com.thizzer.jtouchbar.common.Color;
+import com.thizzer.jtouchbar.common.Image;
+import com.thizzer.jtouchbar.common.ImageName;
+import com.thizzer.jtouchbar.item.TouchBarItem;
+import com.thizzer.jtouchbar.item.view.TouchBarButton;
+import com.thizzer.jtouchbar.item.view.TouchBarView;
+import com.thizzer.jtouchbar.item.view.action.TouchBarViewAction;
 import com.tngtech.configbuilder.ConfigBuilder;
 
 import lombok.extern.slf4j.Slf4j;
@@ -110,39 +122,50 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 		// only for testing purposes
 		// Locale.setDefault(Locale.GERMAN);
 		
-		// TODO brenner: identify that we run on a mac
-		// String lcOSName = System.getProperty("os.name").toLowerCase();
-		// boolean IS_MAC = lcOSName.startsWith("mac os x");
+		// identify that we run on a mac
+		String lcOSName = System.getProperty("os.name").toLowerCase();
+		boolean IS_MAC = lcOSName.startsWith("mac os x");
 		
-		// put jmenubar on mac menu bar
-		System.setProperty("apple.laf.useScreenMenuBar", "true"); //$NON-NLS-1$ //$NON-NLS-2$
-		// set application name
-		System.setProperty("com.apple.mrj.application.apple.menu.about.name", //$NON-NLS-1$
-				Messages.getString("DropletMainFrame.about")); //$NON-NLS-1$
-		// set look and feel
-		try {
-			// use nimbus L&F if available
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) { //$NON-NLS-1$
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (Exception e) {
-			log.warn("Nimbus L&F not found!");
+		if (IS_MAC) {
+			// put jmenubar on mac menu bar
+			System.setProperty("apple.laf.useScreenMenuBar", "true"); // $NON-NLS-1$ //$NON-NLS-2$
+			// use smoother fonts
+			System.setProperty("apple.awt.textantialiasing", "true");
+			// set the brushed metal look and feel, if desired
+			System.setProperty("apple.awt.brushMetalLook", "true");
+			// use the system look and feel
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} else {
+			try {
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+					if ("Nimbus".equals(info.getName())) {
+						UIManager.setLookAndFeel(info.getClassName());
+						break;
+					}
+				}
+			} catch (Exception e) {
+				// use the system look and feel
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			}
 		}
 		
 		// initialize DropletConfig
 		log.info("initialize config");
 		new ConfigBuilder<DropletConfig>(DropletConfig.class).build();
 		
-		EventQueue.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
 					DropletMainFrame frame = new DropletMainFrame();
 					frame.setVisible(true);
+					
+					// init touchbar
+					JTouchBar jTouchBar = new JTouchBar();
+					jTouchBar.setCustomizationIdentifier("DropletJavaTouchBar");
+					jTouchBar.show(frame);
+					frame.initTouchBar(jTouchBar);
+					
 				} catch (Exception e) {
 					log.error("A fatal error occured: ", e);
 					e.printStackTrace();
@@ -278,6 +301,65 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 		
 		log.info("Droplet started successfully!");
 		
+	}
+	
+	// TODO refactor
+	private void initTouchBar(final JTouchBar touchBar) {
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFlexibleSpace));
+		
+		// send button
+		TouchBarButton sendButton = new TouchBarButton();
+		// sendButton.setTitle("Send");
+		sendButton.setImage(new Image(ImageName.NSImageNameTouchBarRefreshTemplate, false));
+		sendButton.setBezelColor(Color.LIGHT_GRAY);
+		sendButton.setAction(new TouchBarViewAction() {
+			@Override
+			public void onCall(final TouchBarView view) {
+				// TODO call action
+				System.out.println("Send config to MC");
+			}
+		});
+		touchBar.addItem(new TouchBarItem("Send", sendButton, true));
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFixedSpaceSmall));
+		
+		// start button
+		TouchBarButton startButton = new TouchBarButton();
+		// startButton.setTitle("Start");
+		startButton.setImage(new Image(ImageName.NSImageNameTouchBarPlayTemplate, false));
+		startButton.setBezelColor(Color.DARK_GRAY);
+		startButton.setAction(new TouchBarViewAction() {
+			@Override
+			public void onCall(final TouchBarView view) {
+				// TODO: call service instead
+				{
+					ISerialCommunicationService serialCommProvider = Configuration.getSerialCommProvider();
+					IDropletMessageProtocol messageProtocolProvider = Configuration.getMessageProtocolProvider();
+					
+					// send configuration if it changed since last send
+					String setMessage = messageProtocolProvider.createSetMessage(dropletContext.getDroplet());
+					if (!StringUtils.equals(setMessage, dropletContext.getLastSetMessage())) {
+						String resetMessage = messageProtocolProvider.createResetMessage();
+						serialCommProvider.sendData(resetMessage);
+						serialCommProvider.sendData(setMessage);
+						dropletContext.setLastSetMessage(setMessage);
+					}
+					
+					Integer rounds = dropletContext.getRounds();
+					Integer roundDelay = dropletContext.getRoundDelay();
+					
+					String message = messageProtocolProvider.createStartMessage(rounds, roundDelay);
+					serialCommProvider.sendData(message);
+				}
+			}
+		});
+		touchBar.addItem(new TouchBarItem("Start", startButton, true));
+		
+		// space
+		touchBar.addItem(new TouchBarItem(TouchBarItem.NSTouchBarItemIdentifierFlexibleSpace));
 	}
 	
 	/**
