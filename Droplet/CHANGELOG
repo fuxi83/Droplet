@@ -4,7 +4,7 @@ This project adheres to [Stefan Brenner](http://www.stefanbrenner.com/).
 
 ## [unreleased]
 ### Added
-- Preview for images in watch folder
+- Preview for images in watch folder. Including basic zooming functions
 - Support for Apple Touch Bar
 ### Changed
 - Upgraded to Java 8

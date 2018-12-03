@@ -85,7 +85,7 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 	private final ProcessingPanel processingPanel;
 	private final LoggingPanel loggingPanel;
 	private final DropletToolbar toolbarPanel;
-	private final ImageViewer imageViewer;
+	private final PreviewPanel imageViewer;
 	
 	/**
 	 * Launch the application.
@@ -189,7 +189,7 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 			configPanel = new DeviceSetupPanel(dropletContext.getDroplet());
 			processingPanel = new ProcessingPanel(dropletContext);
 			loggingPanel = new LoggingPanel(dropletContext);
-			imageViewer = new ImageViewer(dropletContext);
+			imageViewer = new PreviewPanel(dropletContext);
 			
 			JSplitPane splitPaneBottom = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, processingPanel, imageViewer);
 			splitPaneBottom.setOneTouchExpandable(true);
