@@ -8,12 +8,43 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Stroke;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
 import com.stefanbrenner.droplet.utils.Messages;
 
 public class PreviewComponent extends JComponent {
+	
+	private final class MouseAdapterExtension extends MouseAdapter {
+		
+		int startX;
+		int startY;
+		
+		private final PreviewMoveListener listener;
+		
+		public MouseAdapterExtension(final PreviewMoveListener listener) {
+			this.listener = listener;
+		}
+		
+		@Override
+		public void mousePressed(final MouseEvent e) {
+			startX = e.getX();
+			startY = e.getY();
+		}
+		
+		@Override
+		public void mouseDragged(final MouseEvent e) {
+			int endX = e.getX();
+			int endY = e.getY();
+			
+			listener.moved(endX - startX, endY - startY);
+			
+			startX = endX;
+			startY = endY;
+		}
+	}
 	
 	private static final long serialVersionUID = -3302237154031424831L;
 	
@@ -30,7 +61,6 @@ public class PreviewComponent extends JComponent {
 	
 	// TODO: failsafe
 	// TODO: loading indicator / dummy image
-	// TODO: navigation with space
 	// TODO: reset on configuration load
 	
 	public PreviewComponent() {
@@ -41,6 +71,10 @@ public class PreviewComponent extends JComponent {
 				zoomOut();
 			}
 		});
+		MouseAdapterExtension myMouseAdapter = new MouseAdapterExtension(
+				(final int diffX, final int diffY) -> move(diffX, diffY));
+		addMouseListener(myMouseAdapter);
+		addMouseMotionListener(myMouseAdapter);
 	}
 	
 	@Override
@@ -109,7 +143,11 @@ public class PreviewComponent extends JComponent {
 		double originalRatio = (double) image.getHeight(this) / image.getWidth(this);
 		h = (int) (w * originalRatio);
 		
-		moveToCenter();
+		// move to center of current view
+		x = (int) -(((-x + (getWidth() / 2)) * factor) - getWidth() / 2);
+		y = (int) -(((-y + (getHeight() / 2)) * factor) - getHeight() / 2);
+		
+		repaint();
 	}
 	
 	private void moveToCenter() {
@@ -164,6 +202,14 @@ public class PreviewComponent extends JComponent {
 		} else {
 			fitTo();
 		}
+	}
+	
+	@Override
+	public void move(final int diffX, final int diffY) {
+		x += diffX;
+		y += diffY;
+		
+		repaint();
 	}
 	
 }
