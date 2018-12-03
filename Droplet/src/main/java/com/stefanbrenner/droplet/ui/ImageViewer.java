@@ -2,6 +2,7 @@ package com.stefanbrenner.droplet.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.ScrollPane;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,7 @@ import java.nio.file.WatchService;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -36,6 +38,23 @@ public class ImageViewer extends JPanel {
 	
 	private final ScrollPane scrollPane;
 	
+	private final String TEST_IMAGE = "/Users/stefan/Development/droplet-repo/Droplet/src/main/resources/image.jpg";
+	
+	private BufferedImage originalImage;
+	private Image scaledImage;
+	private int baseHeight;
+	
+	private static final float ZOOM_FACTOR = 1.2f;
+	
+	// TODO: failsafe
+	// TODO: loading indicator / dummy image
+	// TODO: zoom to center
+	// TODO: performance - lowres image for faster zoom?
+	// TODO: zoom with scrolling
+	// TODO: navigation with space
+	// TODO: reset on configuration load
+	// TODO: zoom to fit on resize of window
+	
 	public ImageViewer(final IDropletContext dropletContext) {
 		
 		setLayout(new BorderLayout());
@@ -51,7 +70,41 @@ public class ImageViewer extends JPanel {
 		
 		add(scrollPane, BorderLayout.CENTER);
 		
+		// toolbar
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JButton btnZoomIn = new JButton("+");
+		btnZoomIn.addActionListener(e -> {
+			if (originalImage != null) {
+				zoomIn();
+			}
+		});
+		toolbar.add(btnZoomIn);
+		JButton btnZoomOut = new JButton("-");
+		btnZoomOut.addActionListener(e -> {
+			if (originalImage != null) {
+				zoomOut();
+			}
+		});
+		toolbar.add(btnZoomOut);
+		JButton btnZoomFit = new JButton("Fit");
+		btnZoomFit.addActionListener(e -> {
+			if (originalImage != null) {
+				showFitImage();
+			}
+		});
+		toolbar.add(btnZoomFit);
+		JButton btnZoomOriginal = new JButton("1:1");
+		btnZoomOriginal.addActionListener(e -> {
+			if (originalImage != null) {
+				showOriginalFileSize();
+			}
+		});
+		toolbar.add(btnZoomOriginal);
+		add(toolbar, BorderLayout.NORTH);
+		
 		new Thread(() -> listenToDir()).start();
+		// showImage(new File(TEST_IMAGE));
+		
 	}
 	
 	private void listenToDir() {
@@ -76,15 +129,36 @@ public class ImageViewer extends JPanel {
 		}
 	}
 	
-	public void showImage(final File newImageFile) {
+	private void showImage(final File newImageFile) {
 		try {
-			BufferedImage bimg = ImageIO.read(newImageFile);
-			Image scaled = bimg.getScaledInstance(-1, scrollPane.getHeight(), Image.SCALE_SMOOTH);
-			ImageIcon icon = new ImageIcon(scaled);
-			image.setIcon(icon);
+			originalImage = ImageIO.read(newImageFile);
+			showFitImage();
 		} catch (IOException e) {
 			log.error("error loading image {}", newImageFile);
 		}
+	}
+	
+	private void showOriginalFileSize() {
+		displayImage(-1);
+	}
+	
+	private void showFitImage() {
+		displayImage(scrollPane.getHeight());
+	}
+	
+	private void zoomIn() {
+		displayImage((int) (baseHeight * ZOOM_FACTOR));
+	}
+	
+	private void zoomOut() {
+		displayImage((int) (baseHeight / ZOOM_FACTOR));
+	}
+	
+	private void displayImage(final int height) {
+		scaledImage = originalImage.getScaledInstance(-1, height, Image.SCALE_SMOOTH);
+		ImageIcon icon = new ImageIcon(scaledImage);
+		image.setIcon(icon);
+		baseHeight = icon.getIconHeight();
 	}
 	
 }
