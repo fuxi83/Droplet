@@ -61,7 +61,6 @@ public class PreviewComponent extends JComponent {
 	private int y = 0;
 	
 	// TODO: failsafe
-	// TODO: reset on configuration load
 	
 	public PreviewComponent() {
 		addMouseWheelListener(e -> {

@@ -78,6 +78,9 @@ public class PreviewPanel extends JPanel {
 				preview.resized();
 			}
 		});
+		
+		// clear preview when new configuration is loaded
+		dropletContext.addPropertyChangeListener(IDropletContext.PROPERTY_FILE, e -> preview.clear());
 	}
 	
 	private void listenToDir() {
