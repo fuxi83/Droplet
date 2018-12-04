@@ -65,13 +65,13 @@ public class ProcessingPanel extends JPanel {
 	
 	private final IMetadata metadata;
 	
-	private IMetadataProcessingService metadataService;
+	private final IMetadataProcessingService metadataService;
 	
 	private JTextField txtWatchFolder;
 	
-	private JTextArea txtComments;
+	private final JTextArea txtComments;
 	
-	private JTextArea txtTags;
+	private final JTextArea txtTags;
 	
 	/**
 	 * Create the panel.
