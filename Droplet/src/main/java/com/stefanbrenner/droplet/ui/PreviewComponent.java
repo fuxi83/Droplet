@@ -60,8 +60,6 @@ public class PreviewComponent extends JComponent {
 	private int x = 0;
 	private int y = 0;
 	
-	// TODO: failsafe
-	
 	public PreviewComponent() {
 		addMouseWheelListener(e -> {
 			if (e.getPreciseWheelRotation() < -0.1) {
