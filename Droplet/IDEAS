@@ -18,9 +18,8 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 
  NEW
 ------------------------
-- use Gitflow Workflow
 - use launch4j (http://launch4j.sourceforge.net/)
-- check new features in updated libraries 
+- check new features in updated libraries
 - maven version up
 - better version management
 - read version from properties file (see https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code)
@@ -63,13 +62,13 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 ================================================================================
  I D E A S
 ================================================================================
-
+- load config from image
+- load images to preview or show navigation to select previous images
 - save comments to a saved configuration
-
 - direct device control: send OFF to all that are ON when closing
 - Disable Serial Communication Actions if No Connection is established
 - Only fire association changed event if object was added/removed?
-- Set Description and Color per Device
+- Set Description per valve
 - Mark Device Type with Icons
 - Sensors
 	- Sensor Setup Panel
@@ -124,8 +123,6 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 			</rdf:li>
 			...
 		</rdf:Bag>
-
-
 - Logging:
 	o Move logging to own window?
 	o Add colored logging messages
@@ -133,7 +130,6 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 	o log comments, times, setup, ... per session into file
 - Internationalize Messages from Arduino
 - Make language configurable
-
 - Tabbed View (Setup, Shooting, Finish/Clean)
 - make devices moveable
 - Create own Spinner for easier round delay input
@@ -148,16 +144,6 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 	o Factor that adapts the action times of devices
 
 
-
-
-
-### Gitflow Workflow
-- Master
-- Develop
-- Feature X
-- Feature Y
-- Release
-- Hotfix
 
 
 

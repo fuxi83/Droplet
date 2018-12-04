@@ -21,12 +21,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.stefanbrenner.droplet.model.IDropletContext;
 import com.stefanbrenner.droplet.model.internal.Configuration;
 import com.stefanbrenner.droplet.utils.Messages;
+import com.sun.nio.file.SensitivityWatchEventModifier;
 
 import lombok.extern.slf4j.Slf4j;
 
+@SuppressWarnings("restriction")
 @Slf4j
 public class PreviewPanel extends JPanel {
 	
@@ -35,8 +40,6 @@ public class PreviewPanel extends JPanel {
 	private final PreviewComponent preview;
 	
 	private final ScrollPane scrollPane;
-	
-	private static final String TEST_IMAGE = "/Users/stefan/Development/droplet-repo/Droplet/src/main/resources/image.jpg";
 	
 	public PreviewPanel(final IDropletContext dropletContext) {
 		
@@ -68,11 +71,6 @@ public class PreviewPanel extends JPanel {
 		add(toolbar, BorderLayout.NORTH);
 		
 		new Thread(() -> listenToDir()).start();
-		// try {
-		// preview.setImage(ImageIO.read(new File(TEST_IMAGE)));
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -86,15 +84,29 @@ public class PreviewPanel extends JPanel {
 		try {
 			WatchService watchService = FileSystems.getDefault().newWatchService();
 			Path dir = Paths.get(Configuration.getWatchFolderURI());
-			dir.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+			
+			/**
+			 * due to performance issues on OSX we need to use
+			 * SensitivityWatchEventModifier
+			 * 
+			 * @see https://stackoverflow.com/questions/9588737/is-java-7-watchservice-slow-for-anyone-else
+			 */
+			dir.register(watchService, new WatchEvent.Kind[] { StandardWatchEventKinds.ENTRY_CREATE },
+					SensitivityWatchEventModifier.HIGH);
 			
 			WatchKey key;
 			while ((key = watchService.take()) != null) {
 				for (WatchEvent<?> event : key.pollEvents()) {
+					@SuppressWarnings("unchecked")
 					Path name = ((WatchEvent<Path>) event).context();
 					File newImage = dir.resolve(name).toFile();
+					String fileExt = FilenameUtils.getExtension(newImage.getName());
 					
-					preview.setImage(ImageIO.read(newImage));
+					// only preview JPG files
+					if (StringUtils.equalsAnyIgnoreCase(fileExt, "jpg", "jpeg")) {
+						preview.setImage(ImageIO.read(newImage));
+					}
+					
 				}
 				key.reset();
 			}

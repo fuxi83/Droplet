@@ -44,6 +44,7 @@ public class PreviewComponent extends JComponent {
 			startX = endX;
 			startY = endY;
 		}
+		
 	}
 	
 	private static final long serialVersionUID = -3302237154031424831L;
@@ -60,7 +61,6 @@ public class PreviewComponent extends JComponent {
 	private int y = 0;
 	
 	// TODO: failsafe
-	// TODO: loading indicator / dummy image
 	// TODO: reset on configuration load
 	
 	public PreviewComponent() {
@@ -136,7 +136,7 @@ public class PreviewComponent extends JComponent {
 			return;
 		}
 		
-		w *= factor;
+		w = (int) Math.round(w * factor);
 		
 		// to avoid rounding issues we use the original ratio to calculate
 		// the new height
@@ -144,8 +144,8 @@ public class PreviewComponent extends JComponent {
 		h = (int) (w * originalRatio);
 		
 		// move to center of current view
-		x = (int) -(((-x + (getWidth() / 2)) * factor) - getWidth() / 2);
-		y = (int) -(((-y + (getHeight() / 2)) * factor) - getHeight() / 2);
+		x = (int) -(Math.round((-x + (Math.round(getWidth() / 2))) * factor) - Math.round(getWidth() / 2));
+		y = (int) -(Math.round((-y + (Math.round(getHeight() / 2))) * factor) - Math.round(getHeight() / 2));
 		
 		repaint();
 	}
