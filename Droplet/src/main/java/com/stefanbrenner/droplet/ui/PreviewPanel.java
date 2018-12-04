@@ -8,6 +8,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,6 +42,8 @@ public class PreviewPanel extends JPanel {
 	
 	private final ScrollPane scrollPane;
 	
+	private WatchService watchService;
+	
 	public PreviewPanel(final IDropletContext dropletContext) {
 		
 		setLayout(new BorderLayout());
@@ -70,7 +73,17 @@ public class PreviewPanel extends JPanel {
 		toolbar.add(btnZoomOriginal);
 		add(toolbar, BorderLayout.NORTH);
 		
-		new Thread(() -> listenToDir()).start();
+		startWatchService();
+		
+		Configuration.addPropertyChangeListener(Configuration.CONF_WATCH_FOLDER_URI, e -> {
+			try {
+				watchService.close();
+				preview.clear();
+				startWatchService();
+			} catch (IOException ex) {
+				log.error("Error closing watch service: {}", ex);
+			}
+		});
 		
 		addComponentListener(new ComponentAdapter() {
 			@Override
@@ -83,9 +96,13 @@ public class PreviewPanel extends JPanel {
 		dropletContext.addPropertyChangeListener(IDropletContext.PROPERTY_FILE, e -> preview.clear());
 	}
 	
+	private void startWatchService() {
+		new Thread(() -> listenToDir()).start();
+	}
+	
 	private void listenToDir() {
 		try {
-			WatchService watchService = FileSystems.getDefault().newWatchService();
+			watchService = FileSystems.getDefault().newWatchService();
 			Path dir = Paths.get(Configuration.getWatchFolderURI());
 			
 			/**
@@ -116,6 +133,8 @@ public class PreviewPanel extends JPanel {
 			
 		} catch (IOException | InterruptedException e) {
 			log.error("error watching folder {} for new images", Configuration.getWatchFolderURI());
+		} catch (ClosedWatchServiceException e) {
+			log.info("Watch service shut down");
 		}
 	}
 	

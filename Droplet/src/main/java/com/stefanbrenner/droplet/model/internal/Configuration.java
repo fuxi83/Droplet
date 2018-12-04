@@ -112,7 +112,9 @@ public final class Configuration {
 	}
 	
 	public static void setWathFolder(final URI watchFolderURI) {
+		URI oldWatchFolder = Configuration.getWatchFolderURI();
 		Configuration.PREFS.put(Configuration.CONF_WATCH_FOLDER_URI, watchFolderURI.toString());
+		Configuration.support.firePropertyChange(Configuration.CONF_WATCH_FOLDER_URI, oldWatchFolder, watchFolderURI);
 	}
 	
 	public static URI getWatchFolderURI() {
