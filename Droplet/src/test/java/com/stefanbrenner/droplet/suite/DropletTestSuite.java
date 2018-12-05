@@ -25,10 +25,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.stefanbrenner.droplet.model.ConfigurationTest;
 import com.stefanbrenner.droplet.model.DeviceComperationTest;
+import com.stefanbrenner.droplet.service.PluginProviderTest;
 import com.stefanbrenner.droplet.service.impl.DropletMessageProtocolTest;
 import com.stefanbrenner.droplet.ui.MessagesTest;
 import com.stefanbrenner.droplet.utils.FileUtilsTest;
-import com.stefanbrenner.droplet.utils.PluginProviderTest;
 import com.stefanbrenner.droplet.utils.UiUtilsTest;
 
 /**

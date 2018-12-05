@@ -110,7 +110,7 @@ public class ArduinoService implements ISerialCommunicationService, SerialPortEv
 	
 	@Override
 	public synchronized void close() {
-		if (connSerialPort != null) {
+		if (connSerialPort != null && connSerialPort.getSerialPortInstance() != null) {
 			
 			log.debug("close connection to port {}", connSerialPort.getSerialPortInstance().getName());
 			

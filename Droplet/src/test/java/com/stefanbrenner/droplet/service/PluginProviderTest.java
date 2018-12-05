@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Droplet. If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.stefanbrenner.droplet.utils;
+package com.stefanbrenner.droplet.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,39 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
-import org.mangosdk.spi.ProviderFor;
+
+import com.stefanbrenner.droplet.utils.PluginLoader;
 
 /**
  * @author Stefan Brenner
  *
  */
 public class PluginProviderTest {
-	
-	/**
-	 * Test interface with on simple method.
-	 */
-	public interface ITestService {
-		
-		String getServiceName();
-	}
-	
-	@ProviderFor(ITestService.class)
-	public static class TestServiceProvider1 implements ITestService {
-		
-		@Override
-		public String getServiceName() {
-			return "TestServiceProvider1";
-		}
-	}
-	
-	@ProviderFor(ITestService.class)
-	public static class TestServiceProvider2 implements ITestService {
-		
-		@Override
-		public String getServiceName() {
-			return "TestServiceProvider2";
-		}
-	}
 	
 	@Test
 	public void testPluginLoader() {
