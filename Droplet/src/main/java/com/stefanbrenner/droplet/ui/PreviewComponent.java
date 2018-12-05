@@ -8,44 +8,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Stroke;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
 import com.stefanbrenner.droplet.utils.Messages;
 
-public class PreviewComponent extends JComponent {
-	
-	private final class MouseAdapterExtension extends MouseAdapter {
-		
-		int startX;
-		int startY;
-		
-		private final PreviewMoveListener listener;
-		
-		public MouseAdapterExtension(final PreviewMoveListener listener) {
-			this.listener = listener;
-		}
-		
-		@Override
-		public void mousePressed(final MouseEvent e) {
-			startX = e.getX();
-			startY = e.getY();
-		}
-		
-		@Override
-		public void mouseDragged(final MouseEvent e) {
-			int endX = e.getX();
-			int endY = e.getY();
-			
-			listener.moved(endX - startX, endY - startY);
-			
-			startX = endX;
-			startY = endY;
-		}
-		
-	}
+public class PreviewComponent extends JComponent implements PreviewMouseListener {
 	
 	private static final long serialVersionUID = -3302237154031424831L;
 	
@@ -68,8 +36,7 @@ public class PreviewComponent extends JComponent {
 				zoomOut();
 			}
 		});
-		MouseAdapterExtension myMouseAdapter = new MouseAdapterExtension(
-				(final int diffX, final int diffY) -> move(diffX, diffY));
+		PreviewMouseAdapter myMouseAdapter = new PreviewMouseAdapter(this);
 		addMouseListener(myMouseAdapter);
 		addMouseMotionListener(myMouseAdapter);
 	}
@@ -207,6 +174,16 @@ public class PreviewComponent extends JComponent {
 		y += diffY;
 		
 		repaint();
+	}
+	
+	@Override
+	public void mouseDragged(final int diffX, final int diffY) {
+		move(diffX, diffY);
+	}
+	
+	@Override
+	public void mouseDoubleClick() {
+		fitTo();
 	}
 	
 }
