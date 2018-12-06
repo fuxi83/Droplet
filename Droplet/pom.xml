@@ -113,6 +113,23 @@
 			<artifactId>jtouchbar</artifactId>
 			<version>0.1.0</version>
 		</dependency>
+		
+		<!-- icons -->
+	    <dependency>
+	        <groupId>org.kordamp.ikonli</groupId>
+	        <artifactId>ikonli-swing</artifactId>
+	        <version>2.4.0</version>
+	    </dependency>
+		<dependency>
+		    <groupId>org.kordamp.ikonli</groupId>
+		    <artifactId>ikonli-fontawesome5-pack</artifactId>
+		    <version>2.4.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.kordamp.ikonli</groupId>
+		    <artifactId>ikonli-fontawesome-pack</artifactId>
+		    <version>2.4.0</version>
+		</dependency>
 
 		<!-- test -->
 		<dependency>

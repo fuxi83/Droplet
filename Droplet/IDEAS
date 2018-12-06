@@ -45,7 +45,6 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 ------------------------
 - Configuration for IDropletMessageProtocol (implements send/start/stop/rounds/delay/...)
   to show or hide ui controls
-- create sexy icons
 - build installers
 - disable start button as long as the execution is running
 - enable cancel button only if execution is running
@@ -132,7 +131,6 @@ Droplet is an Open Source Toolkit for Liquid Art Photographers.
 - Make language configurable
 - Tabbed View (Setup, Shooting, Finish/Clean)
 - make devices moveable
-- Create own Spinner for easier round delay input
 - Drag&Drop Device Panels and Actions
 - Open/Close Panels
 - Create Custom L&F with Synth or Nimbus

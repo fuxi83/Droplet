@@ -86,7 +86,7 @@ public class DropletToolbar extends JPanel {
 		spRounds = new MouseWheelSpinner(true);
 		spRounds.setModel(SpinnerAdapterFactory
 				.createNumberAdapter(adapter.getValueModel(IDropletContext.PROPERTY_ROUNDS), 1, 1, 9999, 1));
-		((JSpinner.DefaultEditor) spRounds.getEditor()).getTextField().setColumns(4);
+		((JSpinner.DefaultEditor) spRounds.getEditor()).getTextField().setColumns(3);
 		add(spRounds);
 		
 		// round delay spinner
@@ -94,7 +94,7 @@ public class DropletToolbar extends JPanel {
 		spRoundDelay = new MouseWheelSpinner(true);
 		spRoundDelay.setModel(SpinnerAdapterFactory.createNumberAdapter(
 				adapter.getValueModel(IDropletContext.PROPERTY_ROUND_DELAY), 1000, 0, 99999999, 1));
-		((JSpinner.DefaultEditor) spRoundDelay.getEditor()).getTextField().setColumns(8);
+		((JSpinner.DefaultEditor) spRoundDelay.getEditor()).getTextField().setColumns(6);
 		updateTooltip();
 		adapter.addBeanPropertyChangeListener(IDropletContext.PROPERTY_ROUND_DELAY, new PropertyChangeListener() {
 			@Override

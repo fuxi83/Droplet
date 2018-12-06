@@ -19,12 +19,15 @@
  *****************************************************************************/
 package com.stefanbrenner.droplet.ui.actions;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 
 import javax.swing.Action;
 import javax.swing.JFrame;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import com.stefanbrenner.droplet.model.IDropletContext;
 import com.stefanbrenner.droplet.model.internal.Configuration;
@@ -44,6 +47,11 @@ public class StartAction extends AbstractSerialAction {
 	public StartAction(final JFrame frame, final IDropletContext dropletContext) {
 		super(frame, dropletContext, Messages.getString("StartAction.title")); //$NON-NLS-1$
 		putValue(Action.SHORT_DESCRIPTION, Messages.getString("StartAction.description")); //$NON-NLS-1$
+		
+		FontIcon icon = FontIcon.of(FontAwesome.PLAY);
+		icon.setIconSize(14);
+		icon.setIconColor(Color.GRAY);
+		putValue(Action.SMALL_ICON, icon);
 	}
 	
 	@Override

@@ -19,12 +19,11 @@
  *****************************************************************************/
 package com.stefanbrenner.droplet.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,6 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.adapter.SpinnerAdapterFactory;
@@ -114,13 +115,11 @@ public class ActionPanel<T extends IAction> extends JPanel {
 		}
 		
 		// remove button
-		btnRemove = new JButton(Messages.getString("ActionPanel.removeAction")); //$NON-NLS-1$
-		btnRemove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent e) {
-				remove();
-			}
-		});
+		FontIcon icon = FontIcon.of(FontAwesome.TRASH);
+		icon.setIconColor(Color.GRAY);
+		btnRemove = new JButton(icon);
+		btnRemove.setBorderPainted(false);
+		btnRemove.addActionListener(e -> remove());
 		btnRemove.setToolTipText(Messages.getString("ActionPanel.removeAction.tooltip")); //$NON-NLS-1$
 		btnRemove.setFocusable(false);
 		UiUtils.editGridBagConstraints(gbc, 3, 0, 0, 0);
