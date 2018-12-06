@@ -66,14 +66,13 @@ public final class UiUtils {
 	 *            time to be formatted as a string
 	 * @return a string representing the time
 	 */
-	public static String formatMillis(final long millis) {
+	public static String formatSeconds(final long seconds) {
 		
-		long hours = TimeUnit.MILLISECONDS.toHours(millis);
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60;
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % 60;
-		long _millis = millis % 1000;
+		long hours = TimeUnit.SECONDS.toHours(seconds);
+		long minutes = TimeUnit.SECONDS.toMinutes(seconds) % 60;
+		long _seconds = TimeUnit.SECONDS.toSeconds(seconds) % 60;
 		
-		return String.format("%dh %dmin %dsec %dms", hours, minutes, seconds, _millis);
+		return String.format("%dh %dmin %dsec", hours, minutes, _seconds);
 	}
 	
 	/**
