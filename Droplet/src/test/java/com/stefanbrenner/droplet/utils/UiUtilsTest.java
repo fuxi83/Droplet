@@ -42,21 +42,11 @@ public class UiUtilsTest {
 	
 	@Test
 	public void testFormatMillis() {
-		assertThat(UiUtils.formatMillis(1000)).isEqualTo("0h 0min 1sec 0ms");
-		assertThat(UiUtils.formatMillis(1001)).isEqualTo("0h 0min 1sec 1ms");
-		assertThat(UiUtils.formatMillis(1999)).isEqualTo("0h 0min 1sec 999ms");
-		assertThat(UiUtils.formatMillis(59999)).isEqualTo("0h 0min 59sec 999ms");
-		
-		assertThat(UiUtils.formatMillis(60000)).isEqualTo("0h 1min 0sec 0ms");
-		assertThat(UiUtils.formatMillis(60001)).isEqualTo("0h 1min 0sec 1ms");
-		assertThat(UiUtils.formatMillis(61001)).isEqualTo("0h 1min 1sec 1ms");
-		assertThat(UiUtils.formatMillis(119999)).isEqualTo("0h 1min 59sec 999ms");
-		assertThat(UiUtils.formatMillis(3599999)).isEqualTo("0h 59min 59sec 999ms");
-		
-		assertThat(UiUtils.formatMillis(3600000)).isEqualTo("1h 0min 0sec 0ms");
-		assertThat(UiUtils.formatMillis(3661001)).isEqualTo("1h 1min 1sec 1ms");
-		assertThat(UiUtils.formatMillis(7199999)).isEqualTo("1h 59min 59sec 999ms");
-		assertThat(UiUtils.formatMillis(89999999)).isEqualTo("24h 59min 59sec 999ms");
+		assertThat(UiUtils.formatSeconds(1)).isEqualTo("0h 0min 1sec");
+		assertThat(UiUtils.formatSeconds(61)).isEqualTo("0h 1min 1sec");
+		assertThat(UiUtils.formatSeconds(3601)).isEqualTo("1h 0min 1sec");
+		assertThat(UiUtils.formatSeconds(3599)).isEqualTo("0h 59min 59sec");
+		assertThat(UiUtils.formatSeconds(86399)).isEqualTo("23h 59min 59sec");
 	}
 	
 	@Test

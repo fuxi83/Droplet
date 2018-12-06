@@ -58,17 +58,21 @@ public class PreviewPanel extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		
 		// toolbar
-		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		JPanel toolbar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		JButton btnZoomIn = new JButton("+");
+		btnZoomIn.setPreferredSize(new Dimension(30, 20));
 		btnZoomIn.addActionListener(e -> preview.zoomIn());
 		toolbar.add(btnZoomIn);
 		JButton btnZoomOut = new JButton("-");
+		btnZoomOut.setPreferredSize(new Dimension(30, 20));
 		btnZoomOut.addActionListener(e -> preview.zoomOut());
 		toolbar.add(btnZoomOut);
 		JButton btnZoomFit = new JButton("Fit");
+		btnZoomFit.setPreferredSize(new Dimension(40, 20));
 		btnZoomFit.addActionListener(e -> preview.fitTo());
 		toolbar.add(btnZoomFit);
 		JButton btnZoomOriginal = new JButton("1:1");
+		btnZoomOriginal.setPreferredSize(new Dimension(40, 20));
 		btnZoomOriginal.addActionListener(e -> preview.showOriginalSize());
 		toolbar.add(btnZoomOriginal);
 		add(toolbar, BorderLayout.NORTH);

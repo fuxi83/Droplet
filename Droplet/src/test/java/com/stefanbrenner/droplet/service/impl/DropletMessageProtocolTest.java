@@ -47,8 +47,8 @@ public class DropletMessageProtocolTest {
 		assertThat(protocol.createStartMessage()).isEqualTo("R;1^1");
 		assertThat(protocol.createStartMessage(1, 0)).isEqualTo("R;1^1");
 		assertThat(protocol.createStartMessage(5, 0)).isEqualTo("R;5^5");
-		assertThat(protocol.createStartMessage(1, 250)).isEqualTo("R;1;250^251");
-		assertThat(protocol.createStartMessage(5, 250)).isEqualTo("R;5;250^255");
+		assertThat(protocol.createStartMessage(1, 2)).isEqualTo("R;1;2000^2001");
+		assertThat(protocol.createStartMessage(5, 10)).isEqualTo("R;5;10000^10005");
 	}
 	
 	@Test

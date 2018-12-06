@@ -86,7 +86,7 @@ public class ArduXposureMessageProtocol implements IDropletMessageProtocol {
 	@Override
 	public String createStartMessage(final int rounds, final int delay) {
 		
-		byte[] result = new byte[] { ArduXposureMessageProtocol.COMMAND_RELEASE, (byte) rounds, (byte) delay };
+		byte[] result = new byte[] { ArduXposureMessageProtocol.COMMAND_RELEASE, (byte) rounds, (byte) (delay * 1000) };
 		
 		return new String(result);
 	}

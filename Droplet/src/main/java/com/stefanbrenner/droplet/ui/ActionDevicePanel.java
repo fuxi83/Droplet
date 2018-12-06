@@ -19,8 +19,7 @@
  *****************************************************************************/
 package com.stefanbrenner.droplet.ui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -28,6 +27,9 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import com.stefanbrenner.droplet.model.IAction;
 import com.stefanbrenner.droplet.model.IActionDevice;
@@ -42,22 +44,20 @@ public class ActionDevicePanel extends DevicePanel<IActionDevice> {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public ActionDevicePanel(JComponent parent, IDroplet droplet, IActionDevice device) {
+	public ActionDevicePanel(final JComponent parent, final IDroplet droplet, final IActionDevice device) {
 		super(parent, droplet, device);
 		
 		updateActionsPanel();
 		initializeListeners();
 	}
 	
-	void createAddButton(JPanel panel) {
+	@Override
+	void createAddButton(final JPanel panel) {
 		// add button
-		JButton btnAdd = new JButton(Messages.getString("ActionDevicePanel.addAction")); //$NON-NLS-1$
-		btnAdd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent action) {
-				addAction(getDevice().createNewAction());
-			}
-		});
+		FontIcon icon = FontIcon.of(FontAwesome.PLUS);
+		icon.setIconColor(Color.GRAY);
+		JButton btnAdd = new JButton(Messages.getString("ActionDevicePanel.addAction"), icon); //$NON-NLS-1$
+		btnAdd.addActionListener(e -> addAction(getDevice().createNewAction()));
 		btnAdd.setFocusable(false);
 		panel.add(btnAdd);
 	}

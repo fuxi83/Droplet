@@ -112,8 +112,9 @@ public class DropletMessageProtocol implements IDropletMessageProtocol {
 		int chksum = rounds;
 		
 		if (delay > 0) {
-			chksum += delay;
-			result += DropletMessageProtocol.FIELD_SEPARATOR + delay;
+			int delayInMillis = delay * 1000;
+			chksum += delayInMillis;
+			result += DropletMessageProtocol.FIELD_SEPARATOR + delayInMillis;
 		}
 		
 		result += DropletMessageProtocol.CHKSUM_SEPARATOR + chksum;

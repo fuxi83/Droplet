@@ -48,8 +48,8 @@ public class DropletContext extends AbstractModelObject implements IDropletConte
 	/** */
 	private static final long serialVersionUID = 1L;
 	
-	/** Default round delay in milliseconds. */
-	private static final int DEFAULT_ROUND_DELAY = 1000;
+	/** Default round delay in seconds. */
+	private static final int DEFAULT_ROUND_DELAY = 1;
 	
 	/**
 	 * The file in which the droplet configuration will be saved.

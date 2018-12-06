@@ -41,6 +41,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.StringUtils;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.beans.BeanAdapter;
@@ -119,7 +121,9 @@ public class DevicePanel<T extends IDevice> extends JPanel {
 			createAddButton(panel);
 			
 			// remove button
-			JButton btnRemove = new JButton(Messages.getString("ActionDevicePanel.removeDevice")); //$NON-NLS-1$
+			FontIcon icon = FontIcon.of(FontAwesome.TRASH);
+			icon.setIconColor(Color.GRAY);
+			JButton btnRemove = new JButton(Messages.getString("ActionDevicePanel.removeDevice"), icon); //$NON-NLS-1$
 			btnRemove.addActionListener(new ActionListener() {
 				
 				@Override
@@ -140,7 +144,7 @@ public class DevicePanel<T extends IDevice> extends JPanel {
 		
 	}
 	
-	void createAddButton(JPanel panel) {
+	void createAddButton(final JPanel panel) {
 		// no add button needed
 	}
 	

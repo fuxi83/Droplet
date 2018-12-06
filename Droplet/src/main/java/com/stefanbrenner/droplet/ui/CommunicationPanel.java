@@ -21,8 +21,6 @@ package com.stefanbrenner.droplet.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -35,6 +33,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.apache.commons.lang3.StringUtils;
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
+
 import com.google.common.collect.Sets;
 import com.stefanbrenner.droplet.model.IDropletContext;
 import com.stefanbrenner.droplet.model.internal.Configuration;
@@ -42,7 +44,6 @@ import com.stefanbrenner.droplet.service.ISerialCommunicationService;
 import com.stefanbrenner.droplet.utils.DropletConfig;
 import com.stefanbrenner.droplet.utils.Messages;
 
-import gnu.io.NRSerialPort;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -74,13 +75,11 @@ public class CommunicationPanel extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.LEFT, 10, 0));
 		setBorder(BorderFactory.createTitledBorder(Messages.getString("CommunicationPanel.title"))); //$NON-NLS-1$
 		
-		btnUpdate = new JButton(Messages.getString("CommunicationPanel.update")); //$NON-NLS-1$
-		btnUpdate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(final ActionEvent arg0) {
-				updatePorts();
-			}
-		});
+		FontIcon icon = FontIcon.of(FontAwesome.REFRESH);
+		icon.setIconColor(Color.GRAY);
+		btnUpdate = new JButton(icon);
+		btnUpdate.setBorderPainted(false);
+		btnUpdate.addActionListener(e -> updatePorts());
 		btnUpdate.setToolTipText(Messages.getString("CommunicationPanel.updateTooltip")); //$NON-NLS-1$
 		add(btnUpdate);
 		
@@ -155,7 +154,7 @@ public class CommunicationPanel extends JPanel {
 	
 	private void updatePorts() {
 		
-		Set<String> newPorts = NRSerialPort.getAvailableSerialPorts();
+		Set<String> newPorts = Configuration.getSerialCommProvider().getPorts();
 		
 		// check if new port is available
 		for (String port : newPorts) {
@@ -199,8 +198,10 @@ public class CommunicationPanel extends JPanel {
 			commService.close();
 		}
 		
-		dropletContext.setPort(portId);
-		connected = commService.connect(portId, dropletContext);
+		if (StringUtils.isNotBlank(portId)) {
+			dropletContext.setPort(portId);
+			connected = commService.connect(portId, dropletContext);
+		}
 		
 		updateStatus(connected);
 	}

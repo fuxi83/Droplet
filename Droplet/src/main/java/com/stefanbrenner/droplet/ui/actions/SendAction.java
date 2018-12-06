@@ -19,6 +19,7 @@
  *****************************************************************************/
 package com.stefanbrenner.droplet.ui.actions;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,6 +27,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+
+import org.kordamp.ikonli.fontawesome.FontAwesome;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import com.stefanbrenner.droplet.model.IActionDevice;
 import com.stefanbrenner.droplet.model.IDroplet;
@@ -47,6 +51,11 @@ public class SendAction extends AbstractSerialAction {
 	public SendAction(final JFrame frame, final IDropletContext dropletContext) {
 		super(frame, dropletContext, Messages.getString("SendAction.title")); //$NON-NLS-1$
 		putValue(Action.SHORT_DESCRIPTION, Messages.getString("SendAction.description")); //$NON-NLS-1$
+		
+		FontIcon icon = FontIcon.of(FontAwesome.EXCHANGE);
+		icon.setIconSize(14);
+		icon.setIconColor(Color.GRAY);
+		putValue(Action.SMALL_ICON, icon);
 		
 		initListener();
 	}

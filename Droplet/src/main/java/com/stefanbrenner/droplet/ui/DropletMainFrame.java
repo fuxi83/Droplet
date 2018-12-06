@@ -129,7 +129,7 @@ public class DropletMainFrame extends JFrame implements MRJAboutHandler, MRJQuit
 		
 		if (IS_MAC) {
 			// put jmenubar on mac menu bar
-			System.setProperty("apple.laf.useScreenMenuBar", "true"); // $NON-NLS-1$ //$NON-NLS-2$
+			System.setProperty("apple.laf.useScreenMenuBar", "true");
 			// use smoother fonts
 			System.setProperty("apple.awt.textantialiasing", "true");
 			// set the brushed metal look and feel, if desired
